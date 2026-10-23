@@ -1,4 +1,4 @@
-// Iowa City Quest - Main Coordinator
+// IC RPG - Main Coordinator
 // This file imports all modules and runs the game loop
 
 import { COLORS, CONFIG } from './constants.js';
@@ -39,7 +39,7 @@ window.debugActions = {
   isActionDebugEnabled
 };
 
-console.log('Iowa City Quest - Modular version loading...');
+console.log('IC RPG - Modular version loading...');
 console.log('All modules imported successfully!');
 console.log('Test modules available: window.gameModules');
 

@@ -1,7 +1,7 @@
 // Game State Management
 import { CAVE_MAPS } from './constants.js';
 
-const ACTION_DEBUG_STORAGE_KEY = 'vc_ic_rpg_action_debug';
+const ACTION_DEBUG_STORAGE_KEY = 'ic_rpg_action_debug';
 
 function readPersistedActionDebugFlag() {
   try {

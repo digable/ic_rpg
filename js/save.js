@@ -2,8 +2,7 @@ import { game, actions } from './game-state.js';
 import { travelToMapDestination } from './features/world/map-transition-service.js';
 import { getExpForNextLevel } from './leveling.js';
 
-const SAVE_KEY = 'vc_ic_rpg_saves_v2';
-const LEGACY_SAVE_KEY = 'vc_ic_rpg_save_v1';
+const SAVE_KEY = 'ic_rpg_saves';
 export const MAX_LOCAL_SAVES = 3;
 
 function hideTitleScreen() {
@@ -68,24 +67,9 @@ function normalizeSlots(input) {
 
 function readRawSaves() {
   try {
-    const currentRaw = window.localStorage.getItem(SAVE_KEY);
-    if (currentRaw) {
-      const parsed = JSON.parse(currentRaw);
-      if (Array.isArray(parsed)) {
-        return normalizeSlots(parsed);
-      }
-    }
-
-    const legacyRaw = window.localStorage.getItem(LEGACY_SAVE_KEY);
-    if (!legacyRaw) return makeEmptySlots();
-    const legacyParsed = JSON.parse(legacyRaw);
-    if (!isValidSaveEntry(legacyParsed)) return makeEmptySlots();
-
-    const migrated = makeEmptySlots();
-    migrated[0] = legacyParsed;
-    window.localStorage.setItem(SAVE_KEY, JSON.stringify(migrated));
-    window.localStorage.removeItem(LEGACY_SAVE_KEY);
-    return migrated;
+    const raw = window.localStorage.getItem(SAVE_KEY);
+    if (!raw) return makeEmptySlots();
+    return normalizeSlots(JSON.parse(raw));
   } catch {
     return makeEmptySlots();
   }

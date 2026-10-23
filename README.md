@@ -1,4 +1,4 @@
-# 🎮 Iowa City Quest
+# 🎮 IC RPG
 
 A retro NES-style RPG adventure set in Iowa City! Explore campus, complete quests, battle academic monsters, and experience college life in pixel art form.
 
@@ -15,7 +15,7 @@ Along the way, you'll meet colorful locals, complete quests, battle academic mon
 
 ## 🕹️ Play Now
 
-**[Play on GitHub Pages](https://digable.github.io/vc_ic_rpg/)**
+**[Play at icrpg.sodamachine.net](https://icrpg.sodamachine.net/)**
 
 ## ✨ Features
 
@@ -114,10 +114,39 @@ Complete Iowa City-themed quests:
 - **A Button** - Interact / Select
 - **M Button** - Menu / Cancel
 
+## 🚀 Deployment
+
+IC RPG is live at **https://icrpg.sodamachine.net/**, hosted on digiweb with game data stored in SQLite.
+
+Deploys run automatically via GitHub Actions ([.github/workflows/deploy.yaml](.github/workflows/deploy.yaml)) on every push to `main`, or manually from the Actions tab (`workflow_dispatch`):
+
+1. The runner joins the Tailscale network (tagged `tag:ci`).
+2. It SSHes into digiweb as `deploy` with a restricted key that can only run `update-icrpg.sh`, which updates the live site.
+
+Deploys are serialized (`concurrency: deploy`), so overlapping pushes queue instead of cancelling each other.
+
+**Required repository secrets:**
+
+| Secret | Purpose |
+|--------|---------|
+| `TS_OAUTH_CLIENT_ID` / `TS_OAUTH_SECRET` | Tailscale OAuth client for joining the tailnet |
+| `DEPLOY_SSH_KEY` | Private key for the restricted `deploy` user |
+| `DEPLOY_KNOWN_HOSTS` | Host key entry for digiweb |
+
+### Running Locally
+
+```bash
+npm install
+npm run serve   # http://localhost:5500
+npm test
+```
+
 ## 📁 Project Structure
 
 ```
-vc_ic_rpg/
+ic_rpg/
+├── .github/workflows/
+│   └── deploy.yaml         # Deploys to digiweb on push to main
 ├── index.html              # Main HTML - Canvas & mobile controls
 ├── game.css                # Pixel-perfect NES-style graphics
 ├── LICENSE                 # MIT License
@@ -143,7 +172,7 @@ vc_ic_rpg/
     ├── game-state.js       # Global game state & initialization
     ├── constants.js        # Game configuration & colors
     ├── data.js             # Items, spells, shops, routes
-    ├── save.js             # Multi-slot local save/load + migration helpers
+    ├── save.js             # Multi-slot local save/load
     ├── maps.js             # Map layouts & NPC positions
     ├── enemies.js          # Enemy definitions & encounters
     ├── npc-appearance.js   # Deterministic NPC visual identity
@@ -184,7 +213,6 @@ vc_ic_rpg/
     ├── interactions.js     # NPC & vendor interactions
     ├── dialogue.js         # Dialogue system with message flow
     └── leveling.js         # NES FF-style leveling (50 levels, class growth)
-```
 ```
 
 ## 🛠️ Technical Details
@@ -302,7 +330,7 @@ All equipment, training, and items affect 6 core statistics:
 - **World + navigation** - `js/maps.js`, `js/features/world/map-transition-service.js`, `js/features/world/world.js`, `js/interactions.js`, `js/input.js` control movement, collisions, exits, and map-level interactions.
 - **Combat + progression** - `js/features/battle/battle.js`, `js/leveling.js`, `js/enemies.js` handle turn flow, enemy behaviors, rewards, and stat growth.
 - **Quest + narrative systems** - `js/features/quests/quests.js`, `js/features/quests/logic.js`, `js/dialogue.js` define quest data, objective updates, and dialogue progression.
-- **Player economy + persistence** - `js/data.js`, `js/save.js` define purchasables/training routes and save/load + migration behavior.
+- **Player economy + persistence** - `js/data.js`, `js/save.js` define purchasables/training routes and save/load behavior.
 - **Presentation layer** - `js/rendering/*`, `game.css`, `js/features/music/music.js` render visuals/HUD and drive adaptive audio states.
 - **Visual identity helpers** - `js/npc-appearance.js`, `js/enemy-appearance.js` generate deterministic appearance signatures for uniqueness.
 - **Testing stack** - `tests.js` is the stable CLI entrypoint; `tests/runner.js` orchestrates suite modules under `tests/suites/`.
