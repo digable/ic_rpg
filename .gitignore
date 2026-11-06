@@ -15,3 +15,18 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
